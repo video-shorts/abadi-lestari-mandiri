@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Pendaftaran Nasabah</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f6f7;
+      margin: 0;
+      padding: 0;
+    }
+    .form-container {
+      max-width: 520px;
+      background: #fff;
+      margin: 40px auto;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    .form-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .form-header img {
+      max-width: 120px;
+      margin-bottom: 10px;
+    }
+    .form-header h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    .form-header h3 {
+      margin-top: 5px;
+      color: #27ae60;
+      font-weight: normal;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccd6dd;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #27ae60;
+      box-shadow: 0 0 0 3px rgba(39,174,96,0.15);
+    }
+    .tenor-angsuran {
+      margin-top: 10px;
+      background: #f8fdf9;
+      padding: 12px;
+      border: 1px solid #d7f0dd;
+      border-radius: 8px;
+      display: none;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      background: #27ae60;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #219150;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-header">
+      <img src="https://i.ibb.co.com/fYGDvGVq/Chat-GPT-Image-6-Sep-2025-18-57-28.png" alt="Logo">
+      <h2>Form Pendaftaran Nasabah</h2>
+      <h3>Abadi Lestari Mandiri</h3>
+    </div>
+
+    <form id="nasabahForm">
+
+      <label>Nama Lengkap</label>
+      <input type="text" id="nama" required>
+
+      <label>Nomor KTP</label>
+      <input type="text" id="ktp" required>
+
+      <label>Alamat</label>
+      <textarea id="alamat" rows="3" required></textarea>
+
+      <label>Nomor HP</label>
+      <input type="text" id="hp" required>
+
+      <label>Jumlah Pinjaman</label>
+      <select id="pinjaman" required onchange="hitungAngsuran()">
+        <option value="">-- Pilih Jumlah --</option>
+        <option value="100000">100.000</option>
+        <option value="200000">200.000</option>
+        <option value="300000">300.000</option>
+        <option value="400000">400.000</option>
+        <option value="500000">500.000</option>
+        <option value="600000">600.000</option>
+        <option value="700000">700.000</option>
+        <option value="800000">800.000</option>
+        <option value="900000">900.000</option>
+        <option value="1000000">1.000.000</option>
+      </select>
+
+      <label>Tenor</label>
+      <select id="tenor" required onchange="hitungAngsuran()">
+        <option value="">-- Pilih Tenor --</option>
+        <option value="24">24 Hari</option>
+        <option value="30">30 Hari</option>
+      </select>
+
+      <div class="tenor-angsuran" id="infoPembayaran">
+        <p><strong>Tenor:</strong> <span id="tenorText"></span> hari</p>
+        <p><strong>Total Pengembalian:</strong> Rp <span id="totalBayar"></span></p>
+        <p><strong>Angsuran / Hari:</strong> Rp <span id="angsuran"></span></p>
+        <p><strong>Potongan (10%):</strong> Rp <span id="potongan"></span></p>
+        <p><strong>Tabungan (5%):</strong> Rp <span id="tabungan"></span></p>
+        <p><strong>Admin (5%):</strong> Rp <span id="admin"></span></p>
+        <p><strong>Terima Dana Bersih ke Nasabah (90%):</strong> Rp <span id="bersih"></span></p>
+      </div>
+
+      <label>Upload Foto KTP</label>
+      <input type="file" id="fotoKTP" accept="image/*">
+
+      <label>Upload Selfie dengan KTP</label>
+      <input type="file" id="selfieKTP" accept="image/*">
+
+      <button type="button" onclick="kirimWA()">Kirim ke WhatsApp</button>
+    </form>
+  </div>
+
+<script>
+function hitungAngsuran() {
+  const pinjaman = parseInt(document.getElementById('pinjaman').value);
+  const tenor = parseInt(document.getElementById('tenor').value);
+
+  if (pinjaman && tenor) {
+    const totalBayar = pinjaman * 1.2;
+    const angsuran = totalBayar / tenor;
+
+    const potongan = pinjaman * 0.10;
+    const tabungan = pinjaman * 0.05;
+    const admin = pinjaman * 0.05;
+    const bersih = pinjaman * 0.90;
+
+    document.getElementById('tenorText').textContent = tenor;
+    document.getElementById('totalBayar').textContent = totalBayar.toLocaleString('id-ID');
+    document.getElementById('angsuran').textContent = angsuran.toLocaleString('id-ID');
+    document.getElementById('potongan').textContent = potongan.toLocaleString('id-ID');
+    document.getElementById('tabungan').textContent = tabungan.toLocaleString('id-ID');
+    document.getElementById('admin').textContent = admin.toLocaleString('id-ID');
+    document.getElementById('bersih').textContent = bersih.toLocaleString('id-ID');
+
+    document.getElementById('infoPembayaran').style.display = 'block';
+  } else {
+    document.getElementById('infoPembayaran').style.display = 'none';
+  }
+}
+
+function kirimWA() {
+  const nama = document.getElementById('nama').value;
+  const ktp = document.getElementById('ktp').value;
+  const alamat = document.getElementById('alamat').value;
+  const hp = document.getElementById('hp').value;
+  const pinjaman = parseInt(document.getElementById('pinjaman').value);
+  const tenor = parseInt(document.getElementById('tenor').value);
+
+  const totalBayar = pinjaman * 1.2;
+  const angsuran = totalBayar / tenor;
+  const potongan = pinjaman * 0.10;
+  const tabungan = pinjaman * 0.05;
+  const admin = pinjaman * 0.05;
+  const bersih = pinjaman * 0.90;
+
+  const pesan = `*Pendaftaran Nasabah Baru*\n\n` +
+    `Nama: ${nama}\n` +
+    `No KTP: ${ktp}\n` +
+    `Alamat: ${alamat}\n` +
+    `No HP: ${hp}\n` +
+    `Jumlah Pinjaman: Rp ${pinjaman.toLocaleString('id-ID')}\n` +
+    `Tenor: ${tenor} hari\n` +
+    `Total Pengembalian: Rp ${totalBayar.toLocaleString('id-ID')}\n` +
+    `Angsuran / Hari: Rp ${angsuran.toLocaleString('id-ID')}\n` +
+    `Potongan (10%): Rp ${potongan.toLocaleString('id-ID')}\n` +
+    `Tabungan (5%): Rp ${tabungan.toLocaleString('id-ID')}\n` +
+    `Admin (5%): Rp ${admin.toLocaleString('id-ID')}\n` +
+    `Terima Dana Bersih: Rp ${bersih.toLocaleString('id-ID')}\n\n` +
+    `📌 Silakan kirim foto KTP dan selfie KTP di pesan ini.`;
+
+  const url = `https://wa.me/6281315070877?text=${encodeURIComponent(pesan)}`;
+  window.open(url, '_blank');
+}
+</script>
+
+</body>
+</html>
